@@ -9,6 +9,9 @@
 #import "RotaryWheel.h"
 #import <QuartzCore/QuartzCore.h>
 
+#define DEG2RAD(angle) angle*M_PI/180.0
+
+
 @interface RotaryWheel ()
 //added a private method called drawWheel
     -(void)drawWheel;
@@ -36,7 +39,6 @@ static float deltaAngle;
 @synthesize sectors;
 @synthesize currentSector;
 
-
 //
 -(id) initWithFrame:(CGRect)frame andDelegate:(id)del withSections:(int)sectionsNumber {
 //1 Call super init
@@ -57,9 +59,7 @@ static float deltaAngle;
 }
 
 -(void) drawWheel {
-    
-    UIBEz
-    
+
     //1 Create a view that we’ll put everything else inside.
     container = [[UIView alloc] initWithFrame:self.frame];
     container.backgroundColor = [UIColor whiteColor];
@@ -72,18 +72,29 @@ static float deltaAngle;
     
     //3 For each section, we create a label and set the anchor point to the middle right. The anchorPoint is the pivot point for the layer.
     for (int i = 0; i < numberOfSections; i++) {
+        
+        
+        [self createSector];
+        
         //4 We set the anchor point to the middle right, so now when we set the position it moves the middle right of the label to that point. So here we set the position of the label (the middle right) to the center of the container view. To rotate the label, we can simply set the transform of the label to a rotation transform. We use the built in CGAffineTransformMakeRotation method to do this. We just multiply the amount to rotate per section by the number of sections so far.
         
-        UILabel *wheelLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, container.bounds.size.height/2.0, 1)];
-        wheelLabel.backgroundColor = [UIColor redColor];
-        wheelLabel.text = [NSString stringWithFormat:@"%i", i];
-        wheelLabel.layer.anchorPoint = CGPointMake(1.0f, 0.5f);
-        //5 Adds the label to the container view we created earlier
-        wheelLabel.layer.position = CGPointMake(container.bounds.size.width/2.0, container.bounds.size.height/2.0);
-        wheelLabel.transform = CGAffineTransformMakeRotation(angleSize * i);
-        wheelLabel.tag = i;
+        
+        
+        //CREATE A TRINAGLE HERE INSTEAD OF A LABEL AND SET THAT TRIANGLE'S COLOR**
+//        
+//        
+
+//        UILabel *wheelLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, container.bounds.size.height/2.0, 1)];
+//        wheelLabel.backgroundColor = [UIColor redColor];
+//        wheelLabel.text = [NSString stringWithFormat:@"%i", i];
+//        wheelLabel.layer.anchorPoint = CGPointMake(1.0f, 0.5f);
+//        //5 Adds the label to the container view we created earlier
+//        wheelLabel.layer.position = CGPointMake(container.bounds.size.width/2.0, container.bounds.size.height/2.0);
+//        wheelLabel.transform = CGAffineTransformMakeRotation(angleSize * i);
+//        wheelLabel.tag = i;
         //6
-        [container addSubview:wheelLabel];
+//        [container addSubview:wheelLabel];
+        
     }
     
     //7 Adds the container to the main control.
@@ -244,5 +255,35 @@ static float deltaAngle;
     }
     
 }
+
+-(void) createSector {
+        CAShapeLayer *slice = [CAShapeLayer layer];
+        slice.fillColor = [UIColor blueColor].CGColor;
+        slice.strokeColor = [UIColor blackColor].CGColor;
+        slice.lineWidth = 3.0;
+        
+        CGFloat angle = DEG2RAD(-10.0);
+        CGPoint center = CGPointMake(100.0, 100.0);
+        CGFloat radius = 100.0;
+        
+        UIBezierPath *piePath = [UIBezierPath bezierPath];
+        [piePath moveToPoint:center];
+        
+        [piePath addLineToPoint:CGPointMake(center.x + radius * cosf(angle), center.y + radius * sinf(angle))];
+        
+        [piePath addArcWithCenter:center radius:radius startAngle:angle endAngle:DEG2RAD(60.0) clockwise:YES];
+        
+        //	[piePath addLineToPoint:center];
+        [piePath closePath]; // this will automatically add a straight line to the center
+        slice.path = piePath.CGPath;
+    int i = 0;
+    i++;
+    
+    [container.layer addSublayer:slice];
+    
+    NSLog(@"%i", i);
+
+}
+
 
 @end
