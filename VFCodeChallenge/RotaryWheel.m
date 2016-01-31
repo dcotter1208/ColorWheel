@@ -44,21 +44,15 @@ static float deltaAngle;
         //2 set properties
         self.numberOfSections = sectionsNumber;
         self.delegate = del;
-        
-        NSMutableArray *colorSlices = [NSMutableArray arrayWithObjects:
-                                       [NSNumber numberWithFloat:0.25],
-                                       [NSNumber numberWithFloat:0.25],
-                                       [NSNumber numberWithFloat:0.25],
-                                       [NSNumber numberWithFloat:0.25], nil];
-        
-        self.sliceArray = colorSlices;
-        
+
         //set up the colors for the colorSlices
-        NSArray *colors = [NSArray arrayWithObjects:
+        NSMutableArray *colors = [NSMutableArray arrayWithObjects:
                            (id)[UIColor yellowColor].CGColor,
                            (id)[UIColor purpleColor].CGColor,
                            (id)[UIColor blueColor].CGColor,
                            (id)[UIColor greenColor].CGColor, nil];
+        
+        self.colorsArray = colors;
                 
         //3 Draw Wheel
         
@@ -68,7 +62,7 @@ static float deltaAngle;
 }
 
 -(void) drawWheel {
-    
+
     CGPoint circleCenter = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
 
     //1 Create a view that we’ll put everything else inside.
@@ -83,9 +77,16 @@ static float deltaAngle;
     for (int i = 0; i < numberOfSections; i++) {
         
         CAShapeLayer *slice = [CAShapeLayer layer];
-        slice.fillColor = [UIColor blueColor].CGColor;
-        slice.strokeColor = [UIColor blackColor].CGColor;
+        
+        UIColor *color;
+        NSLog(@"%i", i);
+        color = [self.colorsArray objectAtIndex:i];
+        
+        //THIS MAKES THE WHOLE THING A RANDOM COLOR
+        
+        slice.strokeColor = [UIColor whiteColor].CGColor;
         slice.lineWidth = 3.0;
+        slice.fillColor = [UIColor colorWithCGColor:(__bridge CGColorRef _Nonnull)(color)].CGColor;
 
         CGPoint center = CGPointMake(100.0, 100.0);
         CGFloat radius = 100.0;
@@ -94,75 +95,12 @@ static float deltaAngle;
         UIBezierPath *piePath = [UIBezierPath bezierPath];
         [piePath moveToPoint:center];
         [piePath addLineToPoint:circleCenter];
-//        [piePath addLineToPoint:CGPointMake(circleCenter + radius * cosf(angle), center.y + radius * sinf(angle))];
-        
         [piePath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:startAngle + angleSize clockwise:YES];
-        
-        //	[piePath addLineToPoint:center];
         [piePath closePath]; // this will automatically add a straight line to the center
         slice.path = piePath.CGPath;
-        int i = 0;
-        i++;
         
         [container.layer addSublayer:slice];
-    
-//        CAShapeLayer *slice = [CAShapeLayer layer];
-//        
-//        slice.backgroundColor = [UIColor redColor].CGColor;
-//        slice.anchorPoint = CGPointMake(1.0f, 0.5f);
-//        slice.lineWidth = 1.0;
-//        slice.borderColor = [UIColor blueColor].CGColor;
-//        slice.position = CGPointMake(container.bounds.size.width/2.0, container.bounds.size.height/2.0);
-//        slice.transform = CATransform3DMakeRotation(angleSize * i, 0, 0, 0);
-//
-//        CGFloat startValue = 0;
-//        for (int k = 0; k < i; k++) {
-////            startValue = angleSize + .25;
-//            startValue += [[self.sliceArray objectAtIndex:k] floatValue];
-//        }
-//        CGFloat startAngle = startValue * 2 * M_PI - M_PI/2;
-//        
-//        // Determine end angle
-//        CGFloat endValue = 0;
-//        for (int j = (int)i; j >= 0; j--) {
-////            endValue = angleSize + .25;
-//            endValue += [[self.sliceArray objectAtIndex:j] floatValue];
-//
-//        }
-//        CGFloat endAngle = endValue * 2 * M_PI - M_PI/2;
-//        
-//        CGPoint center = CGPointMake(100.0, 100.0);
-//        CGFloat radius = 100.0;
-//        
-//        UIBezierPath *piePath = [UIBezierPath bezierPath];
-//        [piePath moveToPoint:center];
-//        [piePath addLineToPoint:CGPointMake(center.x + radius * cosf(startAngle), center.y + radius * sinf(endAngle))];
-//        [piePath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-//        [piePath closePath]; // this will automatically add a straight line to the center
-//        slice.path = piePath.CGPath;
-//        NSLog(@"START ANGLE: %f", startAngle);
-//        NSLog(@"END ANGLE: %f", endAngle);
-//        
-//        [container.layer addSublayer:slice];
-        
-//        [self createSector];
-     //   CAShapeLayer *wheelLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, container.bounds.size.height/2.0, 50)];
-//        wheelLabel.backgroundColor = [UIColor redColor].CGColor;
-//        wheelLabel.text = [NSString stringWithFormat:@"%i", i];
-//        wheelLabel.anchorPoint = CGPointMake(1.0f, 0.5f);
-        //5 Adds the label to the container view we created earlier
-//        wheelLabel.position = CGPointMake(container.bounds.size.width/2.0, container.bounds.size.height/2.0);
-//        wheelLabel.transform = CGAffineTransformMakeRotation(angleSize * i);
-//        6
-        
-        
-        // CGContextBeginPath(context);
-//        CGContextMoveToPoint(context, circleCenter.x, circleCenter.y);
-//        CGContextAddArc(context, circleCenter.x, circleCenter.y, self.circleRadius, startAngle, endAngle, 0);
-//        CGContextClosePath(context);
-//        CGContextFillPath(context);
-       
-        
+  
     }
     
     
@@ -179,6 +117,38 @@ static float deltaAngle;
     }
     
 }
+
+//-(void)drawRect:(CGRect)rect {
+//    
+//    //get the current graphics context so Quartz can draw into it, and pass that context to our drawPieChart method.
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//    [self drawPieChart:context];
+//    
+//}
+//
+//-(void)drawPieChart: (CGContextRef)context {
+//    CGPoint circleCenter = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+//    CGFloat angleSize = 2*M_PI/numberOfSections;
+//    self.circleRadius = 100;
+//    
+//    for (int i = 0; i < numberOfSections; i++) {
+//        CGFloat startAngle = angleSize * i;
+//        CGFloat endAngle = startAngle + angleSize;
+//        NSObject *o = [self.colorsArray objectAtIndex:i];
+//        
+//        CGContextSetFillColorWithColor(context, (CGColorRef)[self.colorsArray objectAtIndex:i]);
+//        NSLog(@"array index: %lu", (unsigned long)[self.colorsArray indexOfObject:o]);
+//
+//        
+//        CGContextBeginPath(context);
+//        CGContextMoveToPoint(context, circleCenter.x, circleCenter.y);
+//        CGContextAddArc(context, circleCenter.x, circleCenter.y, self.circleRadius, startAngle, endAngle, 0);
+//        CGContextClosePath(context);
+//        CGContextFillPath(context);
+//
+//    }
+//
+//}
 
 
 // MARK: Rotation Methods
