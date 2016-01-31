@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WheelColor.h"
 
 @interface ViewController : UIViewController
 
 @property (nonatomic, strong) NSMutableArray *colorSections;
+@property (nonatomic, strong) WheelColor *wheelColor;
 
 
 @end
