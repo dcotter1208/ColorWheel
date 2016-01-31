@@ -8,28 +8,24 @@
 
 #import "ViewController.h"
 #import "RotaryWheel.h"
+#import "WheelColor.h"
 
 RotaryWheel *colorWheel;
 
 @interface ViewController ()
 
-
-
 @end
-
-
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSUInteger numberOfSections = colorWheel.colorsArray.count;
-    NSLog(@"%lu", (unsigned long)colorWheel.colorsArray.count);
-    int castInt = (int)numberOfSections;
-    NSLog(@"castInt: %i", castInt);
+    self.wheelColor = [[WheelColor alloc]init];
+    int wheelColorArrayCount = (int)self.wheelColor.colorArray.count;
+
     //Set up rotary wheel
-    RotaryWheel *wheel = [[RotaryWheel alloc] initWithFrame:CGRectMake(0, 0, 200, 200) andDelegate:self withSections:8];
+    RotaryWheel *wheel = [[RotaryWheel alloc] initWithFrame:CGRectMake(0, 0, 200, 200) andDelegate:self withSections:wheelColorArrayCount];
     
     wheel.center = [super.view center];
     //Add wheel to view

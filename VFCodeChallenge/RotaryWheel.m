@@ -11,7 +11,6 @@
 
 #define DEG2RAD(angle) angle*M_PI/180.0
 
-
 @interface RotaryWheel ()
 //added a private method called drawWheel
     -(void)drawWheel;
@@ -31,7 +30,6 @@ static float deltaAngle;
 
 @implementation RotaryWheel
 
-
 //@synthesize will generate getter and setter methods for your property.
 
 //synthesized the three properties and defined initWithFrame:andDelegate:withSections: where the parameters are saved in the properties and the drawWheel method is called to draw the wheel.
@@ -40,28 +38,15 @@ static float deltaAngle;
 @synthesize sectors;
 @synthesize currentSector;
 
-
 -(id) initWithFrame:(CGRect)frame andDelegate:(id)del withSections:(int)sectionsNumber {
 //1 Call super init
     if ((self = [super initWithFrame: frame])) {
         //2 set properties
         self.numberOfSections = sectionsNumber;
         self.delegate = del;
+        
+        self.wheelColor = [[WheelColor alloc]init];
 
-        //set up the colors for the colorSlices
-        NSMutableArray *colors = [NSMutableArray arrayWithObjects:
-                            (id)[UIColor yellowColor].CGColor,
-                            (id)[UIColor purpleColor].CGColor,
-                            (id)[UIColor blueColor].CGColor,
-                            (id)[UIColor greenColor].CGColor,
-                            (id)[UIColor blackColor].CGColor,
-                            (id)[UIColor redColor].CGColor,
-                            (id)[UIColor orangeColor].CGColor,
-                            (id)[UIColor brownColor].CGColor, nil];
-        
-        self.colorsArray = colors;
-        
-                
         //3 Draw Wheel
         
         [self drawWheel];
@@ -87,11 +72,11 @@ static float deltaAngle;
         CAShapeLayer *slice = [CAShapeLayer layer];
         
         UIColor *color;
-        color = [self.colorsArray objectAtIndex:i];
+        color = [self.wheelColor.colorArray objectAtIndex:i];
         
         slice.strokeColor = [UIColor whiteColor].CGColor;
         slice.lineWidth = 3.0;
-        slice.fillColor = [UIColor colorWithCGColor:(__bridge CGColorRef _Nonnull)(color)].CGColor;
+        slice.fillColor = color.CGColor;
         CGPoint center = CGPointMake(100.0, 100.0);
         CGFloat radius = 100.0;
         CGFloat startAngle = angleSize * i;
@@ -118,7 +103,6 @@ static float deltaAngle;
     } else {
         [self buildSectorsOdd];
     }
-    
 }
 
 // MARK: Rotation Methods
@@ -187,10 +171,9 @@ static float deltaAngle;
         } else if (radians > s.minValue && radians < s.maxValue) {
             newVal = radians - s.midValue;
             currentSector = s.sectorNumber;
-        
         }
-
     }
+    
 //7 set up animation for final rotation
     [UIView beginAnimations: nil context: NULL];
     [UIView setAnimationDuration:0.2];
@@ -300,15 +283,9 @@ static float deltaAngle;
         NSLog(@"START ANGLE: %f", startAngle);
         NSLog(@"END ANGLE: %f", endAngle);
 
-    
         [container.layer addSublayer:slice];
-        
     }
-    
-
-
-    
-    }
+}
 
 
 

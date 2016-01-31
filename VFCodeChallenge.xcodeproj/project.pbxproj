@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C08A98F01C5EB2B800AEB475 /* WheelColor.m in Sources */ = {isa = PBXBuildFile; fileRef = C08A98EF1C5EB2B800AEB475 /* WheelColor.m */; };
 		C0CAA6131C5AA6C4008C0B51 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0CAA6121C5AA6C4008C0B51 /* QuartzCore.framework */; };
 		C0CAA6161C5ACCD4008C0B51 /* Sector.m in Sources */ = {isa = PBXBuildFile; fileRef = C0CAA6151C5ACCD4008C0B51 /* Sector.m */; };
 		C0CDE6921C5A82A2005CAB92 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C0CDE6911C5A82A2005CAB92 /* main.m */; };
@@ -38,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C08A98EE1C5EB2B800AEB475 /* WheelColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WheelColor.h; sourceTree = "<group>"; };
+		C08A98EF1C5EB2B800AEB475 /* WheelColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WheelColor.m; sourceTree = "<group>"; };
 		C0CAA6111C5A95C9008C0B51 /* RotaryProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RotaryProtocol.h; sourceTree = "<group>"; };
 		C0CAA6121C5AA6C4008C0B51 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		C0CAA6141C5ACCD4008C0B51 /* Sector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sector.h; sourceTree = "<group>"; };
@@ -128,6 +131,8 @@
 				C0CDE6C31C5A952C005CAB92 /* RotaryWheel.h */,
 				C0CDE6C41C5A952C005CAB92 /* RotaryWheel.m */,
 				C0CAA6111C5A95C9008C0B51 /* RotaryProtocol.h */,
+				C08A98EE1C5EB2B800AEB475 /* WheelColor.h */,
+				C08A98EF1C5EB2B800AEB475 /* WheelColor.m */,
 				C0CAA6171C5ACCE4008C0B51 /* Model */,
 				C0CDE6991C5A82A2005CAB92 /* Main.storyboard */,
 				C0CDE69C1C5A82A2005CAB92 /* Assets.xcassets */,
@@ -295,6 +300,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0CDE6981C5A82A2005CAB92 /* ViewController.m in Sources */,
+				C08A98F01C5EB2B800AEB475 /* WheelColor.m in Sources */,
 				C0CDE6951C5A82A2005CAB92 /* AppDelegate.m in Sources */,
 				C0CDE6C51C5A952C005CAB92 /* RotaryWheel.m in Sources */,
 				C0CDE6921C5A82A2005CAB92 /* main.m in Sources */,
