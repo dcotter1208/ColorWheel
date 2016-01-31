@@ -34,31 +34,35 @@ static float deltaAngle;
 
 //synthesized the three properties and defined initWithFrame:andDelegate:withSections: where the parameters are saved in the properties and the drawWheel method is called to draw the wheel.
 @synthesize delegate, container, numberOfSections;
-
 @synthesize startTransform;
 @synthesize sectors;
 @synthesize currentSector;
 
-//
 -(id) initWithFrame:(CGRect)frame andDelegate:(id)del withSections:(int)sectionsNumber {
 //1 Call super init
-    
     if ((self = [super initWithFrame: frame])) {
         //2 set properties
         self.numberOfSections = sectionsNumber;
         self.delegate = del;
         
+        NSMutableArray *colors = [NSMutableArray arrayWithObjects:
+                           (id)[UIColor yellowColor].CGColor,
+                           (id)[UIColor blueColor].CGColor,
+                           (id)[UIColor redColor].CGColor,
+                           (id)[UIColor greenColor].CGColor, nil];
+        
+        self.colorsArray = colors;
+        
         //3 Draw Wheel
         
         [self drawWheel];
-    
     }
-    
     return self;
-
 }
 
 -(void) drawWheel {
+    
+    CGPoint circleCenter = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
 
     //1 Create a view that we’ll put everything else inside.
     container = [[UIView alloc] initWithFrame:self.frame];
@@ -66,24 +70,20 @@ static float deltaAngle;
     container.layer.cornerRadius = 100.0;
     container.layer.borderColor = [UIColor blackColor].CGColor;
     container.layer.borderWidth = 1.0;
-    
-    //2 There are 2 * PI radians in a circle so we divide the number of radians by the number of sections we wish to display in our control. This gives us an amount we have to rotate between sections, which we’ll use later.
-    CGFloat angleSize = 2*M_PI/numberOfSections;
-    
-    //3 For each section, we create a label and set the anchor point to the middle right. The anchorPoint is the pivot point for the layer.
-    for (int i = 0; i < numberOfSections; i++) {
-        
-        
-        [self createSector];
-        
-        //4 We set the anchor point to the middle right, so now when we set the position it moves the middle right of the label to that point. So here we set the position of the label (the middle right) to the center of the container view. To rotate the label, we can simply set the transform of the label to a rotation transform. We use the built in CGAffineTransformMakeRotation method to do this. We just multiply the amount to rotate per section by the number of sections so far.
-        
-        
-        
-        //CREATE A TRINAGLE HERE INSTEAD OF A LABEL AND SET THAT TRIANGLE'S COLOR**
-//        
-//        
 
+//    CGFloat angleSize = 2*M_PI/numberOfSections;
+    
+//    for (int i = 0; i < numberOfSections; i++) {
+//
+//        
+//    }
+
+    
+    [self createSector];
+
+//    for (int i = 0; i < numberOfSections; i++) {
+    
+//        [self createSector];
 //        UILabel *wheelLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, container.bounds.size.height/2.0, 1)];
 //        wheelLabel.backgroundColor = [UIColor redColor];
 //        wheelLabel.text = [NSString stringWithFormat:@"%i", i];
@@ -95,7 +95,8 @@ static float deltaAngle;
         //6
 //        [container addSubview:wheelLabel];
         
-    }
+//    }
+    
     
     //7 Adds the container to the main control.
     container.userInteractionEnabled = NO;
@@ -111,10 +112,12 @@ static float deltaAngle;
     
 }
 
+
+// MARK: Rotation Methods
+
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
     //1 Get touch position
     CGPoint touchPoint = [touch locationInView:self];
-    
     //1.1 Get the distance from the center
     float distance = [self calculateDistanceFromCenter:touchPoint];
     //1.2 This way, when taps are too close to the center, the touches are simply ignored because you return a NO, indicating that the component is not handling that touch.
@@ -136,10 +139,9 @@ static float deltaAngle;
 
 }
 
-
 -(BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
     CGFloat radians = atan2f(container.transform.b, container.transform.a);
-    NSLog(@"rad is %f", radians);
+//    NSLog(@"rad is %f", radians);
     
     //the radian calculation is pretty similar to what we did in beginTrackingWithTouch
     CGPoint pt = [touch locationInView:self];
@@ -221,7 +223,7 @@ static float deltaAngle;
         }
         //5 Add sector to the 'sectors' array
         [sectors addObject: sector];
-        NSLog(@"cl is %@", sector);
+//        NSLog(@"cl is %@", sector);
     }
     
 }
@@ -249,7 +251,7 @@ static float deltaAngle;
         }
         
         mid -= fanWidth;
-        NSLog(@"cl is %@", sector);
+//        NSLog(@"cl is %@", sector);
         // 5 - Add sector to array
         [sectors addObject:sector];
     }
@@ -257,33 +259,56 @@ static float deltaAngle;
 }
 
 -(void) createSector {
-        CAShapeLayer *slice = [CAShapeLayer layer];
-        slice.fillColor = [UIColor blueColor].CGColor;
-        slice.strokeColor = [UIColor blackColor].CGColor;
-        slice.lineWidth = 3.0;
+    
+    NSArray *colors = [NSArray arrayWithObjects:
+                       (id)[UIColor yellowColor].CGColor,
+                       (id)[UIColor purpleColor].CGColor,
+                       (id)[UIColor blueColor].CGColor,
+                       (id)[UIColor greenColor].CGColor, nil];
+    
+    for (int i = 0; i < numberOfSections; i++) {
         
-        CGFloat angle = DEG2RAD(-10.0);
+        CAShapeLayer *slice = [CAShapeLayer layer];
+        slice.fillColor = [UIColor yellowColor].CGColor;
+//        slice.fillColor = [UIColor redColor].CGColor;
+        slice.strokeColor = [UIColor blackColor].CGColor;
+        slice.lineWidth = 1.0;
+        
+        CGFloat startValue = 0.00;
+        for (int k = 0; k < i; k++) {
+            startValue = startValue + .25;
+        }
+        CGFloat startAngle = startValue * 2 * M_PI - M_PI/2;
+        
+        // Determine end angle
+        CGFloat endValue = .25;
+        for (int j = (int)i; j >= 0; j--) {
+            endValue = endValue + .25;
+        }
+        CGFloat endAngle = endValue * 2 * M_PI - M_PI/2;
+        
         CGPoint center = CGPointMake(100.0, 100.0);
         CGFloat radius = 100.0;
         
         UIBezierPath *piePath = [UIBezierPath bezierPath];
         [piePath moveToPoint:center];
-        
-        [piePath addLineToPoint:CGPointMake(center.x + radius * cosf(angle), center.y + radius * sinf(angle))];
-        
-        [piePath addArcWithCenter:center radius:radius startAngle:angle endAngle:DEG2RAD(60.0) clockwise:YES];
-        
-        //	[piePath addLineToPoint:center];
+        [piePath addLineToPoint:CGPointMake(center.x + radius * cosf(startAngle), center.y + radius * sinf(endAngle))];
+        [piePath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
         [piePath closePath]; // this will automatically add a straight line to the center
         slice.path = piePath.CGPath;
-    int i = 0;
-    i++;
-    
-    [container.layer addSublayer:slice];
-    
-    NSLog(@"%i", i);
+        NSLog(@"START ANGLE: %f", startAngle);
+        NSLog(@"END ANGLE: %f", endAngle);
 
-}
+    
+        [container.layer addSublayer:slice];
+        
+    }
+    
+
+
+    
+    }
+
 
 
 @end

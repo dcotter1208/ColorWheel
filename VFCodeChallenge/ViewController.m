@@ -19,7 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     //Set up rotary wheel
-    RotaryWheel *wheel = [[RotaryWheel alloc] initWithFrame:CGRectMake(0, 0, 200, 200) andDelegate:self withSections:4];
+    RotaryWheel *wheel = [[RotaryWheel alloc] initWithFrame:CGRectMake(0, 0, 200, 200) andDelegate:self withSections:10];
     
     wheel.center = [super.view center];
     //Add wheel to view
