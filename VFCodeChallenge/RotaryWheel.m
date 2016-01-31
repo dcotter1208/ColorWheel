@@ -28,7 +28,9 @@
 //To save the angle when the user touches the component, we add a static variable of type float
 static float deltaAngle;
 
+
 @implementation RotaryWheel
+
 
 //@synthesize will generate getter and setter methods for your property.
 
@@ -37,6 +39,7 @@ static float deltaAngle;
 @synthesize startTransform;
 @synthesize sectors;
 @synthesize currentSector;
+
 
 -(id) initWithFrame:(CGRect)frame andDelegate:(id)del withSections:(int)sectionsNumber {
 //1 Call super init
@@ -47,12 +50,17 @@ static float deltaAngle;
 
         //set up the colors for the colorSlices
         NSMutableArray *colors = [NSMutableArray arrayWithObjects:
-                           (id)[UIColor yellowColor].CGColor,
-                           (id)[UIColor purpleColor].CGColor,
-                           (id)[UIColor blueColor].CGColor,
-                           (id)[UIColor greenColor].CGColor, nil];
+                            (id)[UIColor yellowColor].CGColor,
+                            (id)[UIColor purpleColor].CGColor,
+                            (id)[UIColor blueColor].CGColor,
+                            (id)[UIColor greenColor].CGColor,
+                            (id)[UIColor blackColor].CGColor,
+                            (id)[UIColor redColor].CGColor,
+                            (id)[UIColor orangeColor].CGColor,
+                            (id)[UIColor brownColor].CGColor, nil];
         
         self.colorsArray = colors;
+        
                 
         //3 Draw Wheel
         
@@ -79,15 +87,11 @@ static float deltaAngle;
         CAShapeLayer *slice = [CAShapeLayer layer];
         
         UIColor *color;
-        NSLog(@"%i", i);
         color = [self.colorsArray objectAtIndex:i];
-        
-        //THIS MAKES THE WHOLE THING A RANDOM COLOR
         
         slice.strokeColor = [UIColor whiteColor].CGColor;
         slice.lineWidth = 3.0;
         slice.fillColor = [UIColor colorWithCGColor:(__bridge CGColorRef _Nonnull)(color)].CGColor;
-
         CGPoint center = CGPointMake(100.0, 100.0);
         CGFloat radius = 100.0;
         CGFloat startAngle = angleSize * i;
@@ -102,8 +106,7 @@ static float deltaAngle;
         [container.layer addSublayer:slice];
   
     }
-    
-    
+
     //7 Adds the container to the main control.
     container.userInteractionEnabled = NO;
     [self addSubview:container];
@@ -117,39 +120,6 @@ static float deltaAngle;
     }
     
 }
-
-//-(void)drawRect:(CGRect)rect {
-//    
-//    //get the current graphics context so Quartz can draw into it, and pass that context to our drawPieChart method.
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    [self drawPieChart:context];
-//    
-//}
-//
-//-(void)drawPieChart: (CGContextRef)context {
-//    CGPoint circleCenter = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
-//    CGFloat angleSize = 2*M_PI/numberOfSections;
-//    self.circleRadius = 100;
-//    
-//    for (int i = 0; i < numberOfSections; i++) {
-//        CGFloat startAngle = angleSize * i;
-//        CGFloat endAngle = startAngle + angleSize;
-//        NSObject *o = [self.colorsArray objectAtIndex:i];
-//        
-//        CGContextSetFillColorWithColor(context, (CGColorRef)[self.colorsArray objectAtIndex:i]);
-//        NSLog(@"array index: %lu", (unsigned long)[self.colorsArray indexOfObject:o]);
-//
-//        
-//        CGContextBeginPath(context);
-//        CGContextMoveToPoint(context, circleCenter.x, circleCenter.y);
-//        CGContextAddArc(context, circleCenter.x, circleCenter.y, self.circleRadius, startAngle, endAngle, 0);
-//        CGContextClosePath(context);
-//        CGContextFillPath(context);
-//
-//    }
-//
-//}
-
 
 // MARK: Rotation Methods
 

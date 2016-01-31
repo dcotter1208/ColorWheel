@@ -24,13 +24,10 @@
 @property (nonatomic, strong) NSMutableArray *sectors;
 @property int currentSector;
 
-
-
 @property (nonatomic, assign) CGFloat circleRadius;
 @property (nonatomic, retain) NSMutableArray *sliceArray;
 @property (nonatomic, retain) NSMutableArray *colorsArray;
 
--(void)drawPieChart: (CGContextRef)context;
 
 
 //This method will be called from the view controller to initialize the component.
