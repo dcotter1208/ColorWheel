@@ -8,10 +8,12 @@
 
 #import "RotaryWheel.h"
 #import <QuartzCore/QuartzCore.h>
+#import <WatchConnectivity/WatchConnectivity.h>
+
 
 #define DEG2RAD(angle) angle*M_PI/180.0
 
-@interface RotaryWheel ()
+@interface RotaryWheel () <WCSessionDelegate>
 //added a private method called drawWheel
     -(void)drawWheel;
 
@@ -37,6 +39,7 @@ static float deltaAngle;
 @synthesize startTransform;
 @synthesize sectors;
 @synthesize currentSector;
+@synthesize currentSectorColor;
 
 -(id) initWithFrame:(CGRect)frame andDelegate:(id)del withSections:(int)sectionsNumber {
 //1 Call super init
@@ -50,6 +53,10 @@ static float deltaAngle;
         //3 Draw Wheel
         
         [self drawWheel];
+        
+        //Activate WCSession for watch connectivity.
+        [self activateWCSession];
+        
     }
     return self;
 }
@@ -104,15 +111,12 @@ static float deltaAngle;
     sectors = [NSMutableArray arrayWithCapacity:numberOfSections];
     if (numberOfSections % 2 == 0) {
         [self buildSectorsEven];
-        NSLog(@"Sector Count: %lu", self.sectors.count);
+//        NSLog(@"Sector Count: %lu", self.sectors.count);
     } else {
         [self buildSectorsOdd];
-        NSLog(@"Sector Count: %lu", self.sectors.count);
+//        NSLog(@"Sector Count: %lu", self.sectors.count);
     }
-    
-    
-    [self.delegate wheelDidChangeColor:[NSString stringWithFormat:@"value is %i", self.currentSector]];
-    
+
 }
 
 // MARK: Rotation Methods
@@ -124,7 +128,7 @@ static float deltaAngle;
     float distance = [self calculateDistanceFromCenter:touchPoint];
     //1.2 This way, when taps are too close to the center, the touches are simply ignored because you return a NO, indicating that the component is not handling that touch.
     if (distance < 40) {
-        NSLog(@"ignoring tap (%f,%f)", touchPoint.x, touchPoint.y);
+//        NSLog(@"ignoring tap (%f,%f)", touchPoint.x, touchPoint.y);
         return NO;
     }
     
@@ -142,7 +146,7 @@ static float deltaAngle;
 }
 
 -(BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-    CGFloat radians = atan2f(container.transform.b, container.transform.a);
+//    CGFloat radians = atan2f(container.transform.b, container.transform.a);
 //    NSLog(@"rad is %f", radians);
     
     //the radian calculation is pretty similar to what we did in beginTrackingWithTouch
@@ -175,12 +179,14 @@ static float deltaAngle;
                     newVal = M_PI + radians;
                 }
                 currentSector = s.sectorNumber;
+                self.currentSectorColor = s.sectorColor;
             }
             
         } else if (radians > s.minValue && radians < s.maxValue) {
             newVal = radians - s.midValue;
             currentSector = s.sectorNumber;
-            NSLog(@"CURRENT SECTOR: %i", currentSector);
+            self.currentSectorColor = s.sectorColor;
+//            NSLog(@"CURRENT SECTOR: %i", currentSector);
             
         }
         
@@ -193,9 +199,49 @@ static float deltaAngle;
     container.transform = transform;
     [UIView commitAnimations];
     
-    [self.delegate wheelDidChangeColor:[NSString stringWithFormat:@"value is %i", self.currentSector]];
-
+    UIColor *currentColor = self.currentSectorColor;
+    [self.delegate wheelDidChangeColor:currentColor];
     
+    int colorHashValue = (int)currentColor.hash;
+    
+    NSString *colorHashStringValue = [NSString stringWithFormat:@"%d", colorHashValue];
+
+    NSLog(@"COLOR STRING VALUE: %@", colorHashStringValue);
+    
+    int backStringBackToInt = [colorHashStringValue intValue];
+    NSLog(@"BACK TO INT: %i", backStringBackToInt);
+
+    WCSession* session = [WCSession defaultSession];
+    session.delegate = self;
+    [session activateSession];
+    
+    
+    [session sendMessage:@{@"color":@"TEST"} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+        
+        NSLog(@"Phone Message Sent");
+        
+    } errorHandler:^(NSError * _Nonnull error) {
+        
+        NSLog(@"Phone: Error sending the message");
+        
+    }];
+    
+//    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.donovan.cotter.VFCodeChallenge.watchkitapp.watchkitextension"];
+//    NSData *colorData = [NSKeyedArchiver archivedDataWithRootObject: currentColor];
+//    [sharedDefaults setObject:colorData forKey:@"currentColor"];
+//    [sharedDefaults setObject:currentColor forKey:@"currentColor"];
+//    [sharedDefaults synchronize];
+    
+//    
+//    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.donovan.cotter.VFCodeChallenge.watchkitapp.watchkitextension"];
+//    
+//    NSData *colorData = [NSKeyedArchiver archivedDataWithRootObject:currentColor];
+//    NSString *stringTesst = @"STRING";
+//    [sharedDefaults setObject:stringTesst forKey:@"string"];
+//    [sharedDefaults setObject:colorData forKey:@"currentColor"];
+//    [sharedDefaults synchronize];
+//    
+//    
 }
 
 //This just measures how far the tap point is from the center
@@ -229,7 +275,7 @@ static float deltaAngle;
             mid = -mid;
             mid -= fanWidth;
         }
-        NSLog(@"Sector: %@", sector);
+//        NSLog(@"Sector: %@", sector);
 
         //5 Add sector to the 'sectors' array
         [sectors addObject: sector];
@@ -263,7 +309,7 @@ static float deltaAngle;
         }
         
         mid -= fanWidth;
-        NSLog(@"Sector: %@", sector);
+//        NSLog(@"Sector: %@", sector);
         // 5 - Add sector to array
         [sectors addObject:sector];
 //        NSLog(@"Sector: %i", sector.sectorNumber);
@@ -305,12 +351,26 @@ static float deltaAngle;
         [piePath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
         [piePath closePath]; // this will automatically add a straight line to the center
         slice.path = piePath.CGPath;
-        NSLog(@"START ANGLE: %f", startAngle);
-        NSLog(@"END ANGLE: %f", endAngle);
+//        NSLog(@"START ANGLE: %f", startAngle);
+//        NSLog(@"END ANGLE: %f", endAngle);
 
         [container.layer addSublayer:slice];
     }
 }
+
+-(void)activateWCSession {
+    WCSession* session = [WCSession defaultSession];
+    session.delegate = self;
+    [session activateSession];
+}
+
+-(void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *,id> *)message replyHandler:(void (^)(NSDictionary<NSString *,id> * _Nonnull))replyHandler {
+    
+    //THIS IS WHERE WE SET UP THAT THE BUTTON ON THE WATCH TAPPED AND COLOR CHANGED AND THAT IS WHEN THE WHEEL SHOULD CHANGE.
+    
+}
+
+
 
 
 

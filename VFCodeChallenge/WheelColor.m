@@ -16,7 +16,7 @@
     self = [super init];
     if (self) {
         
-    _colorArray = [[NSMutableArray alloc] initWithObjects: [UIColor redColor], [UIColor yellowColor], [UIColor purpleColor], [UIColor blueColor], [UIColor orangeColor], [UIColor brownColor], [UIColor greenColor], [UIColor blackColor], nil];
+    _colorArray = [[NSMutableArray alloc] initWithObjects: [UIColor redColor], [UIColor yellowColor], [UIColor purpleColor], [UIColor blueColor], [UIColor orangeColor], [UIColor greenColor], [UIColor blackColor], nil];
         
     }
     

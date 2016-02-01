@@ -8,12 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "WheelColor.h"
+#import "Sector.h"
+#import <WatchConnectivity/WatchConnectivity.h>
+
 
 @interface ViewController : UIViewController
 
 @property (nonatomic, strong) NSMutableArray *colorSections;
 @property (nonatomic, strong) WheelColor *wheelColor;
-
+@property (nonatomic, strong) Sector *sector;
 
 @end
 

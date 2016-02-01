@@ -14,7 +14,7 @@
 
 //The method that will be called called whenever the user lifts their finger from the screen. It indicates a new selection has been made from the menu.
 
-- (void) wheelDidChangeColor:(NSString *)newValue;
+- (void) wheelDidChangeColor:(UIColor *)newValue;
 
 
 @end

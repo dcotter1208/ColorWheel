@@ -9,10 +9,13 @@
 #import "ViewController.h"
 #import "RotaryWheel.h"
 #import "WheelColor.h"
+#import "Sector.h"
+#import <WatchConnectivity/WatchConnectivity.h>
 
 RotaryWheel *colorWheel;
 
-@interface ViewController ()
+@interface ViewController () <WCSessionDelegate>
+@property (weak, nonatomic) IBOutlet UILabel *labelOutlet;
 
 @end
 
@@ -21,6 +24,12 @@ RotaryWheel *colorWheel;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    WCSession* session = [WCSession defaultSession];
+    session.delegate = self;
+    [session activateSession];
+    
+    
+    self.sector = [[Sector alloc]init];
     self.wheelColor = [[WheelColor alloc]init];
     int wheelColorArrayCount = (int)self.wheelColor.colorArray.count;
 
@@ -33,13 +42,42 @@ RotaryWheel *colorWheel;
 
 }
 
-- (void) wheelDidChangeColor:(NSString *)newValue {
+- (void) wheelDidChangeColor:(UIColor *)newValue {
+//    UIColor *currentSectorColor = self.sector.sectorColor;
+
+    NSLog(@"NEW VALUE: %@", newValue);
     
+    self.labelOutlet.backgroundColor = newValue;
+    
+    WCSession* session = [WCSession defaultSession];
+    session.delegate = self;
+    [session activateSession];
+    
+    
+    [session sendMessage:@{@"color":@"TEST"} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+        
+        NSLog(@"Phone Message Sent");
+        
+    } errorHandler:^(NSError * _Nonnull error) {
+        NSLog(@"Error");
+        NSLog(@"%@",error);
+        
+    }];
+    
+
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) session:(nonnull WCSession *)session didReceiveMessage:(nonnull NSDictionary<NSString *,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString *,id> * __nonnull))replyHandler{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.labelOutlet.text = message[@"b"];
+        NSLog(@"%@",message);
+    });
+    
 }
 
 @end

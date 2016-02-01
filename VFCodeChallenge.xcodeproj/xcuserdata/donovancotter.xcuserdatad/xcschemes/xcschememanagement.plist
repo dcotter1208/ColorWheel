@@ -4,14 +4,43 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Notification - WatchColorWheel.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 		<key>VFCodeChallenge.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>WatchApp.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>WatchColorWheel.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<true/>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>C02B13951C5EF5AC0077A8EB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C0AE020F1C5FF4F100C09DF9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>C0CDE68C1C5A82A2005CAB92</key>
 		<dict>
 			<key>primary</key>
