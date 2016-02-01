@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface Sector : NSObject
 
@@ -14,5 +15,6 @@
 @property float maxValue;
 @property float midValue;
 @property int sectorNumber;
+@property UIColor *sectorColor;
 
 @end

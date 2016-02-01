@@ -33,6 +33,10 @@ RotaryWheel *colorWheel;
 
 }
 
+- (void) wheelDidChangeColor:(NSString *)newValue {
+    
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

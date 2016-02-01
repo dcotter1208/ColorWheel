@@ -56,13 +56,17 @@ static float deltaAngle;
 
 -(void) drawWheel {
 
+    UIImageView *bg = [[UIImageView alloc] initWithFrame:self.frame];
+    bg.image = [UIImage imageNamed:@"bg.png"];
+    [self addSubview:bg];
+    
     CGPoint circleCenter = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
 
     //1 Create a view that we’ll put everything else inside.
     container = [[UIView alloc] initWithFrame:self.frame];
     container.backgroundColor = [UIColor whiteColor];
     container.layer.cornerRadius = 100.0;
-    container.layer.borderColor = [UIColor blackColor].CGColor;
+    container.layer.borderColor = [UIColor clearColor].CGColor;
     container.layer.borderWidth = 1.0;
 
     CGFloat angleSize = 2*M_PI/numberOfSections;
@@ -78,7 +82,7 @@ static float deltaAngle;
         slice.lineWidth = 3.0;
         slice.fillColor = color.CGColor;
         CGPoint center = CGPointMake(100.0, 100.0);
-        CGFloat radius = 100.0;
+        CGFloat radius = self.container.frame.size.width - 20.0;
         CGFloat startAngle = angleSize * i;
         
         UIBezierPath *piePath = [UIBezierPath bezierPath];
@@ -100,9 +104,15 @@ static float deltaAngle;
     sectors = [NSMutableArray arrayWithCapacity:numberOfSections];
     if (numberOfSections % 2 == 0) {
         [self buildSectorsEven];
+        NSLog(@"Sector Count: %lu", self.sectors.count);
     } else {
         [self buildSectorsOdd];
+        NSLog(@"Sector Count: %lu", self.sectors.count);
     }
+    
+    
+    [self.delegate wheelDidChangeColor:[NSString stringWithFormat:@"value is %i", self.currentSector]];
+    
 }
 
 // MARK: Rotation Methods
@@ -113,7 +123,7 @@ static float deltaAngle;
     //1.1 Get the distance from the center
     float distance = [self calculateDistanceFromCenter:touchPoint];
     //1.2 This way, when taps are too close to the center, the touches are simply ignored because you return a NO, indicating that the component is not handling that touch.
-    if (distance < 40 || distance > 80) {
+    if (distance < 40) {
         NSLog(@"ignoring tap (%f,%f)", touchPoint.x, touchPoint.y);
         return NO;
     }
@@ -164,14 +174,16 @@ static float deltaAngle;
                 } else {
                     newVal = M_PI + radians;
                 }
-                
                 currentSector = s.sectorNumber;
             }
             
         } else if (radians > s.minValue && radians < s.maxValue) {
             newVal = radians - s.midValue;
             currentSector = s.sectorNumber;
+            NSLog(@"CURRENT SECTOR: %i", currentSector);
+            
         }
+        
     }
     
 //7 set up animation for final rotation
@@ -180,6 +192,10 @@ static float deltaAngle;
     CGAffineTransform transform = CGAffineTransformRotate(container.transform, -newVal);
     container.transform = transform;
     [UIView commitAnimations];
+    
+    [self.delegate wheelDidChangeColor:[NSString stringWithFormat:@"value is %i", self.currentSector]];
+
+    
 }
 
 //This just measures how far the tap point is from the center
@@ -207,14 +223,18 @@ static float deltaAngle;
         sector.minValue = mid - (fanWidth/2);
         sector.maxValue = mid + (fanWidth/2);
         sector.sectorNumber = i;
+        sector.sectorColor = [self.wheelColor.colorArray objectAtIndex:i];
         mid -= fanWidth;
         if (sector.minValue < - M_PI) {
             mid = -mid;
             mid -= fanWidth;
         }
+        NSLog(@"Sector: %@", sector);
+
         //5 Add sector to the 'sectors' array
         [sectors addObject: sector];
-//        NSLog(@"cl is %@", sector);
+//        NSLog(@"Sector: %i", sector.sectorNumber);
+//        NSLog(@"Sector: %@", sector.sectorColor);
     }
     
 }
@@ -232,6 +252,7 @@ static float deltaAngle;
         sector.minValue = mid - (fanWidth/2);
         sector.maxValue = mid + (fanWidth/2);
         sector.sectorNumber = i;
+        sector.sectorColor = [self.wheelColor.colorArray objectAtIndex:i];
         
         //The main difference from the buildSectorsOdd method is that in this instance pi (or -pi if you move counterclockwise) is not a max or min point, but it coincides with a midpoint. So you have to check if, by subtracting the sector width from the max value, you pass the -pi limit, and if you do, set the min value as positive.
         
@@ -242,9 +263,13 @@ static float deltaAngle;
         }
         
         mid -= fanWidth;
-//        NSLog(@"cl is %@", sector);
+        NSLog(@"Sector: %@", sector);
         // 5 - Add sector to array
         [sectors addObject:sector];
+//        NSLog(@"Sector: %i", sector.sectorNumber);
+//        NSLog(@"Sector: %@", sector.sectorColor);
+        
+
     }
     
 }
