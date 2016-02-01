@@ -10,7 +10,7 @@
 #import "RotaryProtocol.h"
 #import "Sector.h"
 #import "WheelColor.h"
-
+#import <WatchConnectivity/WatchConnectivity.h>
 
 @interface RotaryWheel : UIControl
 
@@ -24,6 +24,7 @@
 @property CGAffineTransform startTransform;
 @property (nonatomic, strong) NSMutableArray *sectors;
 @property int currentSector;
+@property UIColor *currentSectorColor;
 
 @property (nonatomic, assign) CGFloat circleRadius;
 @property (nonatomic, retain) NSMutableArray *sliceArray;

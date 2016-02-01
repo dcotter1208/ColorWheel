@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "0720"
+   version = "1.3">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C02B13951C5EF5AC0077A8EB"
+               BuildableName = "WatchColorWheel.app"
+               BlueprintName = "WatchColorWheel"
+               ReferencedContainer = "container:VFCodeChallenge.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C02B13A11C5EF5AC0077A8EB"
+               BuildableName = "WatchColorWheel Extension.appex"
+               BlueprintName = "WatchColorWheel Extension"
+               ReferencedContainer = "container:VFCodeChallenge.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C0CDE68C1C5A82A2005CAB92"
+               BuildableName = "VFCodeChallenge.app"
+               BlueprintName = "VFCodeChallenge"
+               ReferencedContainer = "container:VFCodeChallenge.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <Testables>
+      </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "C02B13951C5EF5AC0077A8EB"
+            BuildableName = "WatchColorWheel.app"
+            BlueprintName = "WatchColorWheel"
+            ReferencedContainer = "container:VFCodeChallenge.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES">
+      <RemoteRunnable
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.carousel"
+         RemotePath = "/VFCodeChallenge">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "C02B13951C5EF5AC0077A8EB"
+            BuildableName = "WatchColorWheel.app"
+            BlueprintName = "WatchColorWheel"
+            ReferencedContainer = "container:VFCodeChallenge.xcodeproj">
+         </BuildableReference>
+      </RemoteRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "C02B13951C5EF5AC0077A8EB"
+            BuildableName = "WatchColorWheel.app"
+            BlueprintName = "WatchColorWheel"
+            ReferencedContainer = "container:VFCodeChallenge.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <RemoteRunnable
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.carousel"
+         RemotePath = "/VFCodeChallenge">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "C02B13951C5EF5AC0077A8EB"
+            BuildableName = "WatchColorWheel.app"
+            BlueprintName = "WatchColorWheel"
+            ReferencedContainer = "container:VFCodeChallenge.xcodeproj">
+         </BuildableReference>
+      </RemoteRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "C02B13951C5EF5AC0077A8EB"
+            BuildableName = "WatchColorWheel.app"
+            BlueprintName = "WatchColorWheel"
+            ReferencedContainer = "container:VFCodeChallenge.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>
