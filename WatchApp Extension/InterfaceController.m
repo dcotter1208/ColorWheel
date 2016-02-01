@@ -53,10 +53,36 @@
 - (void) session:(nonnull WCSession *)session didReceiveMessage:(nonnull NSDictionary<NSString *,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString *,id> * __nonnull))replyHandler{
 
     
+    NSString *stringColorSentFromPhone = [message valueForKey:@"color"];
+    int colorStringBackToInt = [stringColorSentFromPhone intValue];
     
-    
-//    [[self messageLabel] setText:message[@"a"]];
-    NSLog(@"MESSAGE RECEIVED: %@", message);
+    switch (colorStringBackToInt) {
+        case 65536:
+            [_colorButton setBackgroundColor:[UIColor blackColor]];
+            break;
+        case 11141120:
+            [_colorButton setBackgroundColor:[UIColor greenColor]];
+            break;
+        case 149585920:
+            [_colorButton setBackgroundColor:[UIColor orangeColor]];
+            break;
+        case 917504:
+            [_colorButton setBackgroundColor:[UIColor blueColor]];
+            break;
+        case 72482816:
+            [_colorButton setBackgroundColor:[UIColor purpleColor]];
+            break;
+        case 155123712:
+            [_colorButton setBackgroundColor:[UIColor yellowColor]];
+            break;
+        case 144048128:
+            [_colorButton setBackgroundColor:[UIColor redColor]];
+            break;
+        default:
+            break;
+    }
+
+    NSLog(@"MESSAGE RECEIVED FROM PHONE: %@", message);
 }
 
 @end

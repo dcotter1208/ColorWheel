@@ -216,32 +216,17 @@ static float deltaAngle;
     [session activateSession];
     
     
-    [session sendMessage:@{@"color":@"TEST"} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+    [session sendMessage:@{@"color":colorHashStringValue} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
         
-        NSLog(@"Phone Message Sent");
+        NSLog(@"Phone Message Sent - RotaryWheel");
         
     } errorHandler:^(NSError * _Nonnull error) {
         
-        NSLog(@"Phone: Error sending the message");
+        NSLog(@"Error sending the message - RotaryWheel");
         
     }];
     
-//    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.donovan.cotter.VFCodeChallenge.watchkitapp.watchkitextension"];
-//    NSData *colorData = [NSKeyedArchiver archivedDataWithRootObject: currentColor];
-//    [sharedDefaults setObject:colorData forKey:@"currentColor"];
-//    [sharedDefaults setObject:currentColor forKey:@"currentColor"];
-//    [sharedDefaults synchronize];
-    
-//    
-//    NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc]initWithSuiteName:@"group.donovan.cotter.VFCodeChallenge.watchkitapp.watchkitextension"];
-//    
-//    NSData *colorData = [NSKeyedArchiver archivedDataWithRootObject:currentColor];
-//    NSString *stringTesst = @"STRING";
-//    [sharedDefaults setObject:stringTesst forKey:@"string"];
-//    [sharedDefaults setObject:colorData forKey:@"currentColor"];
-//    [sharedDefaults synchronize];
-//    
-//    
+  
 }
 
 //This just measures how far the tap point is from the center

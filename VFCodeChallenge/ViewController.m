@@ -49,20 +49,21 @@ RotaryWheel *colorWheel;
     
     self.labelOutlet.backgroundColor = newValue;
     
-    WCSession* session = [WCSession defaultSession];
-    session.delegate = self;
-    [session activateSession];
-    
-    
-    [session sendMessage:@{@"color":@"TEST"} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-        
-        NSLog(@"Phone Message Sent");
-        
-    } errorHandler:^(NSError * _Nonnull error) {
-        NSLog(@"Error");
-        NSLog(@"%@",error);
-        
-    }];
+//    WCSession* session = [WCSession defaultSession];
+//    session.delegate = self;
+//    [session activateSession];
+//    
+//    
+//    [session sendMessage:@{@"color":@"TESTFROMVC"} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+//        
+//        NSLog(@"Phone Message Sent - FROM ViewController");
+//        
+//    } errorHandler:^(NSError * _Nonnull error) {
+//        
+//        NSLog(@"Error SENDING MESSAGE TO WATCH - ViewController");
+//        NSLog(@"%@",error);
+//        
+//    }];
     
 
 }
@@ -72,10 +73,11 @@ RotaryWheel *colorWheel;
     // Dispose of any resources that can be recreated.
 }
 
+
 - (void) session:(nonnull WCSession *)session didReceiveMessage:(nonnull NSDictionary<NSString *,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString *,id> * __nonnull))replyHandler{
     dispatch_async(dispatch_get_main_queue(), ^{
         self.labelOutlet.text = message[@"b"];
-        NSLog(@"%@",message);
+        NSLog(@"MESSAGE FROM WATCH SETS LABEL TO: %@",message);
     });
     
 }
