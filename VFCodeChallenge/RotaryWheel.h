@@ -19,17 +19,15 @@
 @property (weak) id <RotaryProtocol> delegate;
 @property (nonatomic, strong) UIView *container;
 @property int numberOfSections;
-
-//This is needed to save the transform when the user taps on the component.
-@property CGAffineTransform startTransform;
 @property (nonatomic, strong) NSMutableArray *sectors;
 @property int currentSector;
 @property UIColor *currentSectorColor;
-
 @property (nonatomic, assign) CGFloat circleRadius;
 @property (nonatomic, retain) NSMutableArray *sliceArray;
 @property (nonatomic, retain) NSMutableArray *colorsArray;
 @property (nonatomic, strong) WheelColor *wheelColor;
+//This is needed to save the transform when the user taps on the component.
+@property CGAffineTransform startTransform;
 
 //This method will be called from the view controller to initialize the component.
 -(id) initWithFrame:(CGRect)frame andDelegate:(id)del withSections:(int)sectionsNumber;

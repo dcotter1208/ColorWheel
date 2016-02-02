@@ -9,16 +9,15 @@
 #import "RotaryWheel.h"
 #import <QuartzCore/QuartzCore.h>
 #import <WatchConnectivity/WatchConnectivity.h>
-
-
-#define DEG2RAD(angle) angle*M_PI/180.0
+//
+//#define DEG2RAD(angle) angle*M_PI/180.0
 
 @interface RotaryWheel () <WCSessionDelegate>
 
     -(void)drawWheel;
 
 //Helper method to ignore taps too close to the center of the wheel, by preventing the dispatch of any event when such taps occur.
-    - (float) calculateDistanceFromCenter:(CGPoint)point;
+    -(float)calculateDistanceFromCenter:(CGPoint)point;
 
     //Two helper method definitions to build the sectors depending on odd or even number.
     -(void) buildSectorsEven;
@@ -29,15 +28,7 @@
 //To save the angle when the user touches the component, we add a static variable of type float
 static float deltaAngle;
 
-
 @implementation RotaryWheel
-
-//@synthesize will generate getter and setter methods for your property.
-
-//synthesized the three properties and defined initWithFrame:andDelegate:withSections: where the parameters are saved in the properties and the drawWheel method is called to draw the wheel.
-@synthesize sectors;
-@synthesize currentSector;
-@synthesize currentSectorColor;
 
 -(id) initWithFrame:(CGRect)frame andDelegate:(id)del withSections:(int)sectionsNumber {
 //1 Call super init
@@ -48,11 +39,8 @@ static float deltaAngle;
         
         self.wheelColor = [[WheelColor alloc]init];
 
-        //3 Draw Wheel
-        
         [self drawWheel];
         
-        //Activate WCSession for watch connectivity.
         [self activateWCSession];
         
     }
@@ -102,13 +90,11 @@ static float deltaAngle;
     [self addSubview:_container];
     
     //8 Initialize sectors
-    sectors = [NSMutableArray arrayWithCapacity:_numberOfSections];
+    _sectors = [NSMutableArray arrayWithCapacity:_numberOfSections];
     if (_numberOfSections % 2 == 0) {
         [self buildSectorsEven];
-//        NSLog(@"Sector Count: %lu", self.sectors.count);
     } else {
         [self buildSectorsOdd];
-//        NSLog(@"Sector Count: %lu", self.sectors.count);
     }
 
 }
@@ -122,10 +108,8 @@ static float deltaAngle;
     float distance = [self calculateDistanceFromCenter:touchPoint];
     //1.2 This way, when taps are too close to the center, the touches are simply ignored because you return a NO, indicating that the component is not handling that touch.
     if (distance < 40) {
-//        NSLog(@"ignoring tap (%f,%f)", touchPoint.x, touchPoint.y);
         return NO;
     }
-    
     //2 Calculate distance from center
     float dx = touchPoint.x - _container.center.x;
     float dy = touchPoint.y = _container.center.y;
@@ -140,16 +124,13 @@ static float deltaAngle;
 }
 
 -(BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
-//    CGFloat radians = atan2f(container.transform.b, container.transform.a);
-//    NSLog(@"rad is %f", radians);
-    
     //the radian calculation is pretty similar to what we did in beginTrackingWithTouch
     CGPoint pt = [touch locationInView:self];
     float dx = pt.x - _container.center.x;
     float dy = pt.y - _container.center.y;
     float angle = atan2(dy, dx);
     float angleDifference = deltaAngle - angle;
-    //the code specifies -angleDifference to compensate for the fact that values might be in the negative quadrant.
+    //the code specifies angleDifference to compensate for the fact that values might be in the negative quadrant.
     _container.transform = CGAffineTransformRotate(_startTransform, -angleDifference);
 
     return YES;
@@ -162,7 +143,7 @@ static float deltaAngle;
     //2 Initialize new value
     CGFloat newVal = 0.0;
     //3 - Iterate through all the sectors
-    for (Sector *s in sectors) {
+    for (Sector *s in _sectors) {
         //4 See if the current sector contains the radian value
         if (s.minValue > 0 && s.maxValue < 0) {
             if (s.maxValue > radians || s.minValue < radians) {
@@ -172,18 +153,15 @@ static float deltaAngle;
                 } else {
                     newVal = M_PI + radians;
                 }
-                currentSector = s.sectorNumber;
-                self.currentSectorColor = s.sectorColor;
+                _currentSector = s.sectorNumber;
+                _currentSectorColor = s.sectorColor;
             }
-            
         } else if (radians > s.minValue && radians < s.maxValue) {
             newVal = radians - s.midValue;
-            currentSector = s.sectorNumber;
-            self.currentSectorColor = s.sectorColor;
-//            NSLog(@"CURRENT SECTOR: %i", currentSector);
+            _currentSector = s.sectorNumber;
+            _currentSectorColor = s.sectorColor;
             
         }
-        
     }
     
 //7 set up animation for final rotation
@@ -193,30 +171,23 @@ static float deltaAngle;
     _container.transform = transform;
     [UIView commitAnimations];
     
-    UIColor *currentColor = self.currentSectorColor;
+    UIColor *currentColor = _currentSectorColor;
     [self.delegate wheelDidChangeColor:currentColor];
     
     int colorHashValue = (int)currentColor.hash;
-    
     NSString *colorHashStringValue = [NSString stringWithFormat:@"%d", colorHashValue];
-
-    NSLog(@"COLOR STRING VALUE: %@", colorHashStringValue);
-    
-    int backStringBackToInt = [colorHashStringValue intValue];
-    NSLog(@"BACK TO INT: %i", backStringBackToInt);
 
     WCSession* session = [WCSession defaultSession];
     session.delegate = self;
     [session activateSession];
     
-    
     [session sendMessage:@{@"color":colorHashStringValue} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
         
-        NSLog(@"Phone Message Sent - RotaryWheel");
+        NSLog(@"Phone Message Sent From Phone");
         
     } errorHandler:^(NSError * _Nonnull error) {
         
-        NSLog(@"Error sending the message - RotaryWheel");
+        NSLog(@"Error Sending Message From Phone");
         
     }];
 }
@@ -227,7 +198,6 @@ static float deltaAngle;
     float dx = point.x - center.x;
     float dy = point.y - center.y;
     return sqrtf(dx*dx + dy*dy);
-
 }
 
 -(void) buildSectorsOdd {
@@ -241,7 +211,7 @@ static float deltaAngle;
     for (int i = 0; i < _numberOfSections; i++) {
         Sector *sector = [[Sector alloc] init];
         
-        //4 When calculating the min and max values, you add/subtract half of the sector width to get the correct values. Remember that your range is from -pi to pi, so everything has to be “normalized” between those values. If a value is greater than pi or –pi, that means you’ve changed quadrant. Since you’ve populated the wheel clockwise, you have to take into account when the minimum value is less than pi, and in that case change the sign of the midpoint.
+    //4 When calculating the min and max values, you add/subtract half of the sector width to get the correct values. The range is from -pi to pi, so everything has to be “normalized” between those values. If a value is greater than pi or –pi, that means you’ve changed quadrant. Since the wheel was populated clockwise, you have to take into account when the minimum value is less than pi, and in that case change the sign of the midpoint.
         sector.midValue = mid;
         sector.minValue = mid - (fanWidth/2);
         sector.maxValue = mid + (fanWidth/2);
@@ -252,14 +222,10 @@ static float deltaAngle;
             mid = -mid;
             mid -= fanWidth;
         }
-//        NSLog(@"Sector: %@", sector);
 
         //5 Add sector to the 'sectors' array
-        [sectors addObject: sector];
-//        NSLog(@"Sector: %i", sector.sectorNumber);
-//        NSLog(@"Sector: %@", sector.sectorColor);
+        [_sectors addObject: sector];
     }
-    
 }
 
 -(void) buildSectorsEven {
@@ -277,7 +243,7 @@ static float deltaAngle;
         sector.sectorNumber = i;
         sector.sectorColor = [self.wheelColor.colorArray objectAtIndex:i];
         
-        //The main difference from the buildSectorsOdd method is that in this instance pi (or -pi if you move counterclockwise) is not a max or min point, but it coincides with a midpoint. So you have to check if, by subtracting the sector width from the max value, you pass the -pi limit, and if you do, set the min value as positive.
+    //The main difference from the buildSectorsOdd method is that in this instance pi (or -pi if you move counterclockwise) is not a max or min point, but it coincides with a midpoint. So you have to check if, by subtracting the sector width from the max value, you pass the -pi limit, and if you do, set the min value as positive.
         
         if (sector.maxValue-fanWidth < - M_PI) {
             mid = M_PI;
@@ -286,52 +252,9 @@ static float deltaAngle;
         }
         
         mid -= fanWidth;
-//        NSLog(@"Sector: %@", sector);
         // 5 - Add sector to array
-        [sectors addObject:sector];
-//        NSLog(@"Sector: %i", sector.sectorNumber);
-//        NSLog(@"Sector: %@", sector.sectorColor);
-        
+        [_sectors addObject:sector];
 
-    }
-    
-}
-
--(void) createSector {
-    
-    for (int i = 0; i < _numberOfSections; i++) {
-        
-        CAShapeLayer *slice = [CAShapeLayer layer];
-        slice.fillColor = [UIColor yellowColor].CGColor;
-        slice.strokeColor = [UIColor blackColor].CGColor;
-        slice.lineWidth = 1.0;
-        
-        CGFloat startValue = 0.00;
-        for (int k = 0; k < i; k++) {
-            startValue = startValue + .25;
-        }
-        CGFloat startAngle = startValue * 2 * M_PI - M_PI/2;
-        
-        // Determine end angle
-        CGFloat endValue = .25;
-        for (int j = (int)i; j >= 0; j--) {
-            endValue = endValue + .25;
-        }
-        CGFloat endAngle = endValue * 2 * M_PI - M_PI/2;
-        
-        CGPoint center = CGPointMake(100.0, 100.0);
-        CGFloat radius = 100.0;
-        
-        UIBezierPath *piePath = [UIBezierPath bezierPath];
-        [piePath moveToPoint:center];
-        [piePath addLineToPoint:CGPointMake(center.x + radius * cosf(startAngle), center.y + radius * sinf(endAngle))];
-        [piePath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
-        [piePath closePath]; // this will automatically add a straight line to the center
-        slice.path = piePath.CGPath;
-//        NSLog(@"START ANGLE: %f", startAngle);
-//        NSLog(@"END ANGLE: %f", endAngle);
-
-        [_container.layer addSublayer:slice];
     }
 }
 
@@ -340,15 +263,6 @@ static float deltaAngle;
     session.delegate = self;
     [session activateSession];
 }
-
--(void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *,id> *)message replyHandler:(void (^)(NSDictionary<NSString *,id> * _Nonnull))replyHandler {
-    
-    //THIS IS WHERE WE SET UP THAT THE BUTTON ON THE WATCH TAPPED AND COLOR CHANGED AND THAT IS WHEN THE WHEEL SHOULD CHANGE.
-    
-}
-
-
-
 
 
 @end

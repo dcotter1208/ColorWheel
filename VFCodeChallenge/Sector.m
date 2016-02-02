@@ -10,10 +10,8 @@
 
 @implementation Sector
 
-@synthesize minValue, maxValue, midValue, sectorNumber;
-
 - (NSString *) description {
-    return [NSString stringWithFormat:@"%i | %f, %f, %f", self.sectorNumber, self.minValue, self.midValue, self.maxValue];
+    return [NSString stringWithFormat:@"%i | %f, %f, %f", _sectorNumber, _minValue, _midValue, _maxValue];
 }
 
 @end
