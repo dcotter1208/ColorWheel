@@ -24,11 +24,6 @@ RotaryWheel *colorWheel;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//    WCSession* session = [WCSession defaultSession];
-//    session.delegate = self;
-//    [session activateSession];
-//    
-//    
     self.sector = [[Sector alloc]init];
     self.wheelColor = [[WheelColor alloc]init];
     int wheelColorArrayCount = (int)self.wheelColor.colorArray.count;
