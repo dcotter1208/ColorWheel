@@ -21,8 +21,14 @@ RotaryWheel *colorWheel;
 
 @implementation ViewController
 
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    WCSession* session = [WCSession defaultSession];
+    session.delegate = self;
+    [session activateSession];
     
     self.sector = [[Sector alloc]init];
     self.wheelColor = [[WheelColor alloc]init];
@@ -39,7 +45,25 @@ RotaryWheel *colorWheel;
 
 - (void) wheelDidChangeColor:(UIColor *)newValue {
 
+    WCSession* session = [WCSession defaultSession];
+    session.delegate = self;
+    [session activateSession];
+
+    int colorHashValue = (int)newValue.hash;
+    NSString *colorHashStringValue = [NSString stringWithFormat:@"%d", colorHashValue];
+    NSLog(@"%@", colorHashStringValue);
     self.labelOutlet.backgroundColor = newValue;
+    
+    [session sendMessage:@{@"color":colorHashStringValue} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+        
+        NSLog(@"Phone Message Sent From Phone");
+        
+    } errorHandler:^(NSError * _Nonnull error) {
+        
+        NSLog(@"Error Sending Message From Phone");
+        
+    }];
+    
 
 }
 
@@ -47,6 +71,8 @@ RotaryWheel *colorWheel;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
 
 
 - (void) session:(nonnull WCSession *)session didReceiveMessage:(nonnull NSDictionary<NSString *,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString *,id> * __nonnull))replyHandler{

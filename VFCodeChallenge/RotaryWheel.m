@@ -16,6 +16,9 @@
 
     -(void)drawWheel;
 
+
+
+
 //Helper method to ignore taps too close to the center of the wheel, by preventing the dispatch of any event when such taps occur.
     -(float)calculateDistanceFromCenter:(CGPoint)point;
 
@@ -177,19 +180,21 @@ static float deltaAngle;
     int colorHashValue = (int)currentColor.hash;
     NSString *colorHashStringValue = [NSString stringWithFormat:@"%d", colorHashValue];
 
-    WCSession* session = [WCSession defaultSession];
-    session.delegate = self;
-    [session activateSession];
+//    [self activateWCSession];
+//
+//    WCSession* session = [WCSession defaultSession];
+//    session.delegate = self;
+//    [session activateSession];
     
-    [session sendMessage:@{@"color":colorHashStringValue} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-        
-        NSLog(@"Phone Message Sent From Phone");
-        
-    } errorHandler:^(NSError * _Nonnull error) {
-        
-        NSLog(@"Error Sending Message From Phone");
-        
-    }];
+//    [session sendMessage:@{@"color":colorHashStringValue} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+//        
+//        NSLog(@"Phone Message Sent From Phone");
+//        
+//    } errorHandler:^(NSError * _Nonnull error) {
+//        
+//        NSLog(@"Error Sending Message From Phone");
+//        
+//    }];
 }
 
 //This just measures how far the tap point is from the center
