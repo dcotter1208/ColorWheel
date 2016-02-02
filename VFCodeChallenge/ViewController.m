@@ -24,11 +24,11 @@ RotaryWheel *colorWheel;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    WCSession* session = [WCSession defaultSession];
-    session.delegate = self;
-    [session activateSession];
-    
-    
+//    WCSession* session = [WCSession defaultSession];
+//    session.delegate = self;
+//    [session activateSession];
+//    
+//    
     self.sector = [[Sector alloc]init];
     self.wheelColor = [[WheelColor alloc]init];
     int wheelColorArrayCount = (int)self.wheelColor.colorArray.count;
@@ -43,28 +43,8 @@ RotaryWheel *colorWheel;
 }
 
 - (void) wheelDidChangeColor:(UIColor *)newValue {
-//    UIColor *currentSectorColor = self.sector.sectorColor;
 
-    NSLog(@"NEW VALUE: %@", newValue);
-    
     self.labelOutlet.backgroundColor = newValue;
-    
-//    WCSession* session = [WCSession defaultSession];
-//    session.delegate = self;
-//    [session activateSession];
-//    
-//    
-//    [session sendMessage:@{@"color":@"TESTFROMVC"} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-//        
-//        NSLog(@"Phone Message Sent - FROM ViewController");
-//        
-//    } errorHandler:^(NSError * _Nonnull error) {
-//        
-//        NSLog(@"Error SENDING MESSAGE TO WATCH - ViewController");
-//        NSLog(@"%@",error);
-//        
-//    }];
-    
 
 }
 

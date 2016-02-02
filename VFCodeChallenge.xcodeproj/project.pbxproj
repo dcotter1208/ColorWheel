@@ -207,9 +207,9 @@
 		C0CDE6841C5A82A2005CAB92 = {
 			isa = PBXGroup;
 			children = (
+				C02ADA5D1C5FB15500EA3425 /* Frameworks */,
 				C0AE02111C5FF4F100C09DF9 /* WatchApp */,
 				C0AE02201C5FF4F100C09DF9 /* WatchApp Extension */,
-				C02ADA5D1C5FB15500EA3425 /* Frameworks */,
 				C0CDE68F1C5A82A2005CAB92 /* VFCodeChallenge */,
 				C0CDE6A91C5A82A2005CAB92 /* VFCodeChallengeTests */,
 				C0CDE6B41C5A82A2005CAB92 /* VFCodeChallengeUITests */,
@@ -233,6 +233,7 @@
 			isa = PBXGroup;
 			children = (
 				C02ADA551C5F0B4000EA3425 /* VFCodeChallenge.entitlements */,
+				C0CDE6991C5A82A2005CAB92 /* Main.storyboard */,
 				C0CDE6931C5A82A2005CAB92 /* AppDelegate.h */,
 				C0CDE6941C5A82A2005CAB92 /* AppDelegate.m */,
 				C0CDE6961C5A82A2005CAB92 /* ViewController.h */,
@@ -241,7 +242,6 @@
 				C0CDE6C41C5A952C005CAB92 /* RotaryWheel.m */,
 				C0CAA6111C5A95C9008C0B51 /* RotaryProtocol.h */,
 				C0CAA6171C5ACCE4008C0B51 /* Model */,
-				C0CDE6991C5A82A2005CAB92 /* Main.storyboard */,
 				C0CDE69C1C5A82A2005CAB92 /* Assets.xcassets */,
 				C0CDE69E1C5A82A2005CAB92 /* LaunchScreen.storyboard */,
 				C0CDE6A11C5A82A2005CAB92 /* Info.plist */,
@@ -791,6 +791,7 @@
 				C0AE022F1C5FF4F100C09DF9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C0AE02311C5FF4F100C09DF9 /* Build configuration list for PBXNativeTarget "WatchApp" */ = {
 			isa = XCConfigurationList;
@@ -799,6 +800,7 @@
 				C0AE02331C5FF4F100C09DF9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C0CDE6881C5A82A2005CAB92 /* Build configuration list for PBXProject "VFCodeChallenge" */ = {
 			isa = XCConfigurationList;
