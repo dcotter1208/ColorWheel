@@ -16,9 +16,6 @@
 
     -(void)drawWheel;
 
-
-
-
 //Helper method to ignore taps too close to the center of the wheel, by preventing the dispatch of any event when such taps occur.
     -(float)calculateDistanceFromCenter:(CGPoint)point;
 
