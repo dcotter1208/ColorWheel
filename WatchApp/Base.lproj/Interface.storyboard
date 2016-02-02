@@ -10,7 +10,7 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController">
                     <items>
-                        <button width="1" height="146.5" alignment="left" title="Button" id="eKa-8b-MPv">
+                        <button width="1" height="146.5" alignment="left" id="eKa-8b-MPv">
                             <connections>
                                 <action selector="sendMessage" destination="AgC-eL-Hgc" id="Qtb-y2-Vhg"/>
                             </connections>
@@ -21,7 +21,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="387" y="236"/>
+            <point key="canvasLocation" x="273" y="200"/>
         </scene>
     </scenes>
 </document>

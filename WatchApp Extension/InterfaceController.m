@@ -26,6 +26,7 @@
 - (void)willActivate {
     // This method is called when watch view controller is about to be visible to user
     [super willActivate];
+    
 }
 
 - (void)didDeactivate {
@@ -77,6 +78,9 @@
             break;
         case 144048128:
             [_colorButton setBackgroundColor:[UIColor redColor]];
+            break;
+        case 91054330:
+            [_colorButton setBackgroundColor:[UIColor brownColor]];
             break;
         default:
             break;

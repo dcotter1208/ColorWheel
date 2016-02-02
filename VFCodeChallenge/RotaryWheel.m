@@ -225,8 +225,6 @@ static float deltaAngle;
         NSLog(@"Error sending the message - RotaryWheel");
         
     }];
-    
-  
 }
 
 //This just measures how far the tap point is from the center
