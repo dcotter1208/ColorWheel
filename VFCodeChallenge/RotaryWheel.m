@@ -14,13 +14,13 @@
 #define DEG2RAD(angle) angle*M_PI/180.0
 
 @interface RotaryWheel () <WCSessionDelegate>
-//added a private method called drawWheel
+
     -(void)drawWheel;
 
 //Helper method to ignore taps too close to the center of the wheel, by preventing the dispatch of any event when such taps occur.
     - (float) calculateDistanceFromCenter:(CGPoint)point;
 
-    //Two helper method definitions to build the sectors
+    //Two helper method definitions to build the sectors depending on odd or even number.
     -(void) buildSectorsEven;
     -(void) buildSectorsOdd;
 
@@ -35,8 +35,6 @@ static float deltaAngle;
 //@synthesize will generate getter and setter methods for your property.
 
 //synthesized the three properties and defined initWithFrame:andDelegate:withSections: where the parameters are saved in the properties and the drawWheel method is called to draw the wheel.
-@synthesize delegate, container, numberOfSections;
-@synthesize startTransform;
 @synthesize sectors;
 @synthesize currentSector;
 @synthesize currentSectorColor;
@@ -45,8 +43,8 @@ static float deltaAngle;
 //1 Call super init
     if ((self = [super initWithFrame: frame])) {
         //2 set properties
-        self.numberOfSections = sectionsNumber;
-        self.delegate = del;
+        _numberOfSections = sectionsNumber;
+        _delegate = del;
         
         self.wheelColor = [[WheelColor alloc]init];
 
@@ -63,34 +61,30 @@ static float deltaAngle;
 
 -(void) drawWheel {
 
-    UIImageView *bg = [[UIImageView alloc] initWithFrame:self.frame];
-    bg.image = [UIImage imageNamed:@"bg.png"];
-    [self addSubview:bg];
-    
     CGPoint circleCenter = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
 
     //1 Create a view that we’ll put everything else inside.
-    container = [[UIView alloc] initWithFrame:self.frame];
-    container.backgroundColor = [UIColor whiteColor];
-    container.layer.cornerRadius = 100.0;
-    container.layer.borderColor = [UIColor clearColor].CGColor;
-    container.layer.borderWidth = 1.0;
+    _container = [[UIView alloc] initWithFrame:self.frame];
+    _container.backgroundColor = [UIColor whiteColor];
+    _container.layer.cornerRadius = 100.0;
+    _container.layer.borderColor = [UIColor clearColor].CGColor;
+    _container.layer.borderWidth = 1.0;
 
-    CGFloat angleSize = 2*M_PI/numberOfSections;
+    CGFloat angleSize = 2*M_PI/_numberOfSections;
 
-    for (int i = 0; i < numberOfSections; i++) {
+    for (int i = 0; i < _numberOfSections; i++) {
         
         CAShapeLayer *slice = [CAShapeLayer layer];
         
         UIColor *color;
         color = [self.wheelColor.colorArray objectAtIndex:i];
         
+        slice.fillColor = color.CGColor;
         slice.strokeColor = [UIColor whiteColor].CGColor;
         slice.lineWidth = 3.0;
-        slice.fillColor = color.CGColor;
         CGPoint center = CGPointMake(100.0, 100.0);
         CGFloat radius = self.container.frame.size.width - 20.0;
-        CGFloat startAngle = angleSize * i;
+        CGFloat startAngle = angleSize * i - 2.0;
         
         UIBezierPath *piePath = [UIBezierPath bezierPath];
         [piePath moveToPoint:center];
@@ -99,17 +93,17 @@ static float deltaAngle;
         [piePath closePath]; // this will automatically add a straight line to the center
         slice.path = piePath.CGPath;
         
-        [container.layer addSublayer:slice];
+        [_container.layer addSublayer:slice];
   
     }
 
     //7 Adds the container to the main control.
-    container.userInteractionEnabled = NO;
-    [self addSubview:container];
+    _container.userInteractionEnabled = NO;
+    [self addSubview:_container];
     
     //8 Initialize sectors
-    sectors = [NSMutableArray arrayWithCapacity:numberOfSections];
-    if (numberOfSections % 2 == 0) {
+    sectors = [NSMutableArray arrayWithCapacity:_numberOfSections];
+    if (_numberOfSections % 2 == 0) {
         [self buildSectorsEven];
 //        NSLog(@"Sector Count: %lu", self.sectors.count);
     } else {
@@ -133,12 +127,12 @@ static float deltaAngle;
     }
     
     //2 Calculate distance from center
-    float dx = touchPoint.x - container.center.x;
-    float dy = touchPoint.y = container.center.y;
+    float dx = touchPoint.x - _container.center.x;
+    float dy = touchPoint.y = _container.center.y;
     
     //3 Calculate arctangent value - you get the arctangent value and save the current transform so that you have an initial reference point when the user starts dragging the wheel.
     deltaAngle = atan2f(dy, dx);
-    startTransform = container.transform;
+    _startTransform = _container.transform;
     
     //return YES from the method because the wheel is also meant to respond when a touch is dragged
     return YES;
@@ -151,12 +145,12 @@ static float deltaAngle;
     
     //the radian calculation is pretty similar to what we did in beginTrackingWithTouch
     CGPoint pt = [touch locationInView:self];
-    float dx = pt.x - container.center.x;
-    float dy = pt.y - container.center.y;
+    float dx = pt.x - _container.center.x;
+    float dy = pt.y - _container.center.y;
     float angle = atan2(dy, dx);
     float angleDifference = deltaAngle - angle;
     //the code specifies -angleDifference to compensate for the fact that values might be in the negative quadrant.
-    container.transform = CGAffineTransformRotate(startTransform, -angleDifference);
+    _container.transform = CGAffineTransformRotate(_startTransform, -angleDifference);
 
     return YES;
 }
@@ -164,7 +158,7 @@ static float deltaAngle;
 //The method calculates the current value of radians and compares it to min and max values to find the right sector. Then it finds the difference and builds a new CGAffineTransform. To make the effect look natural, the setting of the rotation is wrapped in an animation lasting 0.2 seconds.
 - (void)endTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
     //1 Get current container rotation in radians
-    CGFloat radians = atan2f(container.transform.b, container.transform.a);
+    CGFloat radians = atan2f(_container.transform.b, _container.transform.a);
     //2 Initialize new value
     CGFloat newVal = 0.0;
     //3 - Iterate through all the sectors
@@ -195,8 +189,8 @@ static float deltaAngle;
 //7 set up animation for final rotation
     [UIView beginAnimations: nil context: NULL];
     [UIView setAnimationDuration:0.2];
-    CGAffineTransform transform = CGAffineTransformRotate(container.transform, -newVal);
-    container.transform = transform;
+    CGAffineTransform transform = CGAffineTransformRotate(_container.transform, -newVal);
+    _container.transform = transform;
     [UIView commitAnimations];
     
     UIColor *currentColor = self.currentSectorColor;
@@ -238,13 +232,13 @@ static float deltaAngle;
 
 -(void) buildSectorsOdd {
     //1 - Identify the length (or the width) of the sector in radians.
-    CGFloat fanWidth = M_PI*2/numberOfSections;
+    CGFloat fanWidth = M_PI*2/_numberOfSections;
     
     //2 Initialize a variable with the initial midpoint. Since our starting point is always zero radians, that becomes our first midpoint.
     CGFloat mid = 0;
     
     //3 Then we iterate through each of the sectors to set up the min, mid, and max values for each sector
-    for (int i = 0; i < numberOfSections; i++) {
+    for (int i = 0; i < _numberOfSections; i++) {
         Sector *sector = [[Sector alloc] init];
         
         //4 When calculating the min and max values, you add/subtract half of the sector width to get the correct values. Remember that your range is from -pi to pi, so everything has to be “normalized” between those values. If a value is greater than pi or –pi, that means you’ve changed quadrant. Since you’ve populated the wheel clockwise, you have to take into account when the minimum value is less than pi, and in that case change the sign of the midpoint.
@@ -270,11 +264,11 @@ static float deltaAngle;
 
 -(void) buildSectorsEven {
     // 1 - Define sector length
-    CGFloat fanWidth = M_PI*2/numberOfSections;
+    CGFloat fanWidth = M_PI*2/_numberOfSections;
     // 2 - Set initial midpoint
     CGFloat mid = 0;
     // 3 - Iterate through all sectors
-    for (int i = 0; i < numberOfSections; i++) {
+    for (int i = 0; i < _numberOfSections; i++) {
         Sector *sector = [[Sector alloc] init];
         // 4 - Set sector values
         sector.midValue = mid;
@@ -305,7 +299,7 @@ static float deltaAngle;
 
 -(void) createSector {
     
-    for (int i = 0; i < numberOfSections; i++) {
+    for (int i = 0; i < _numberOfSections; i++) {
         
         CAShapeLayer *slice = [CAShapeLayer layer];
         slice.fillColor = [UIColor yellowColor].CGColor;
@@ -337,7 +331,7 @@ static float deltaAngle;
 //        NSLog(@"START ANGLE: %f", startAngle);
 //        NSLog(@"END ANGLE: %f", endAngle);
 
-        [container.layer addSublayer:slice];
+        [_container.layer addSublayer:slice];
     }
 }
 
