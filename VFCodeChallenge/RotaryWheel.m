@@ -173,25 +173,6 @@ static float deltaAngle;
     
     UIColor *currentColor = _currentSectorColor;
     [self.delegate wheelDidChangeColor:currentColor];
-    
-    int colorHashValue = (int)currentColor.hash;
-    NSString *colorHashStringValue = [NSString stringWithFormat:@"%d", colorHashValue];
-
-//    [self activateWCSession];
-//
-//    WCSession* session = [WCSession defaultSession];
-//    session.delegate = self;
-//    [session activateSession];
-    
-//    [session sendMessage:@{@"color":colorHashStringValue} replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-//        
-//        NSLog(@"Phone Message Sent From Phone");
-//        
-//    } errorHandler:^(NSError * _Nonnull error) {
-//        
-//        NSLog(@"Error Sending Message From Phone");
-//        
-//    }];
 }
 
 //This just measures how far the tap point is from the center
